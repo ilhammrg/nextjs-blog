@@ -1,7 +1,27 @@
+import { getSortedPostsData } from '../lib/posts'
+
+import { parseISO, format } from 'date-fns'
+
 import Head from 'next/head'
+import Link from 'next/link'
+
 import styles from '../styles/Home.module.css'
 
-export default function Home() {
+export const getStaticProps = async () => {
+  const allPostsData = getSortedPostsData()
+  return {
+    props: {
+      allPostsData
+    }
+  }
+}
+
+function Date({ dateString }) {
+  const date = parseISO(dateString)
+  return <time dateTime={dateString}>{format(date, 'LLLL d, yyyy')}</time>
+}
+
+export default function Home({ allPostsData }) {
   return (
     <div className={styles.container}>
       <Head>
@@ -11,7 +31,7 @@ export default function Home() {
 
       <main className={styles.main}>
         <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
+          Welcome to Next.js!
         </h1>
 
         <p className={styles.description}>
@@ -20,33 +40,27 @@ export default function Home() {
         </p>
 
         <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
+          <Link href={`/posts/${allPostsData[0].id}`}>
+            <a className={styles.card}>
+              <h3>{allPostsData[0].title} &rarr;</h3>
+              <p><Date dateString={allPostsData[0].date} /></p>
+            </a>
+          </Link>
 
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
+          <Link href={`/posts/${allPostsData[1].id}`}>
+            <a className={styles.card}>
+              <h3>{allPostsData[1].title} &rarr;</h3>
+              <p><Date dateString={allPostsData[1].date} /></p>
+            </a>
+          </Link>
 
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
+          <Link href={`/posts/${allPostsData[2].id}`}>
+            <a className={styles.card}>
+              <h3>{allPostsData[2].title} &rarr;</h3>
+              <p><Date dateString={allPostsData[2].date} /></p>
+            </a>
+          </Link>
 
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
         </div>
       </main>
 
